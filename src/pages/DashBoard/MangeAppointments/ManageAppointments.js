@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useEffect, useState } from 'react';
 import useAuth from '../../../hooks/useAuth';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -9,38 +10,33 @@ import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
 import { Button } from '@mui/material';
 
-
-const Appointments = ({date}) => {
-  const [isDeleted , setIsDeleted] =React.useState(null);
+const ManageAppointments = () => {
     const {user} = useAuth();
     const [appointmets,setAppointments] =useState([])
+    const [status,setStatus] = useState("")
+    const handleStatus = (e) => {
+        e.preventDefault();
+        setStatus(e.target.value);
+       
+      };
     useEffect(()=>{
-        const url = `https://lit-caverns-99762.herokuapp.com/appointments?email=${user.email}&date=${date}`
+        const url = 'https://lit-caverns-99762.herokuapp.com/allAppointments'
         fetch(url)
         .then(res=>res.json())
         .then(data=>setAppointments(data))
-    },[date,isDeleted])
-
-    const handleDelete = (id) => {
+    },[])
+    const handleUpdate = (id) => {
       
-      fetch(`https://lit-caverns-99762.herokuapp.com/appointments/${id}`,{
-          method:'DELETE',
-          headers:{
-              'content-type':'application/json'
-          }
-      })
-      .then(res=>res.json())
-          .then(result=>{
-              if(result.deletedCount){
-               setIsDeleted(true)
-              }
-              else{
-                  setIsDeleted(false);
-              }
-          })
-          alert('Are you sure you want to cancel this Booking?')
-  }
-
+        fetch(`https://lit-caverns-99762.herokuapp.com/allAppointments/${id}`,{
+            method:'PUT',
+            headers:{
+                'content-type':'application/json'
+            },
+            body:JSON.stringify({status})
+            
+        })
+        
+    };
     return (
         <TableContainer component={Paper}>
       <Table  aria-label="Appointments table">
@@ -49,9 +45,7 @@ const Appointments = ({date}) => {
             <TableCell>Name</TableCell>
             <TableCell align="center">Time</TableCell>
             <TableCell align="center">Service</TableCell>
-            <TableCell align="center">Phone</TableCell>
             <TableCell align="center">Status</TableCell>
-            <TableCell align="center">Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -66,10 +60,15 @@ const Appointments = ({date}) => {
               <TableCell align="right">{row.time}</TableCell>
               
               <TableCell align="right">{row.serviceName}</TableCell>
-              
-              <TableCell align="right">{row.phone}</TableCell>
-              <TableCell align="right">{row.status}</TableCell>
-              <TableCell align="right"><Button onClick={()=>{handleDelete(row._id)}} variant="contained" sx={{bgcolor:'dark'}}>Delete</Button></TableCell>
+              <TableCell align="right"><form onChange={handleStatus}> <select>
+                  <option value={row.status}>{row.status}</option>
+                  <option type="text">Approved</option>
+                  </select>
+                  <button 
+              style={{backgroundColor:'black' , border:'0',color:'white' ,cursor:'pointer', padding:'10px' ,borderRadius:'2px'}}
+              onClick={()=>handleUpdate(row._id)}>Update</button>
+                  </form>
+                  </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -78,4 +77,4 @@ const Appointments = ({date}) => {
     );
 };
 
-export default Appointments;
+export default ManageAppointments;

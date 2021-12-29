@@ -28,6 +28,8 @@ import DashBoardHome from '../DashBoardHome/DashBoardHome';
 import MakeAdmin from '../MakeAdmin/MakeAdmin';
 import AddDoctor from '../AddDoctor/AddDoctor';
 import useAuth from '../../../hooks/useAuth';
+import ManageAppointments from '../MangeAppointments/ManageAppointments';
+import AdminRoute from '../../Login/AdminRoute/AdminRoute';
 
 const drawerWidth = 150;
 
@@ -52,7 +54,9 @@ function DashBoard(props) {
       
       {admin && <>
         <Link to={`${url}/makeAdmin`}><Button color='inherit'>Make Admin</Button></Link>
-        <Link to={`${url}/addDoctor`}><Button color='inherit'>Add Doctor</Button></Link>
+        <Link to={`${url}/manageAppointments`}><Button color='inherit'>Manage Appointments</Button></Link>
+        
+        
       </>}
       <List>
         {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
@@ -138,11 +142,12 @@ function DashBoard(props) {
         <Route exact path={path}>
           <DashBoardHome></DashBoardHome>
         </Route>
-        <Route path={`${path}/:makeAdmin`}>
+        <Route path={`${path}/makeAdmin`}>
           <MakeAdmin></MakeAdmin>
         </Route>
-        <Route exact path={`${path}/:addDoctor`}>
-          <AddDoctor></AddDoctor>
+      
+        <Route path={`${path}/manageAppointments`}>
+          <ManageAppointments></ManageAppointments>
         </Route>
       </Switch>
         <Typography paragraph>

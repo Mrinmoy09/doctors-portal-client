@@ -42,7 +42,8 @@ const BookingModal = ({ openBooking, handleBookingClose, booking, date , setBook
             ...bookingInfo,
             time,
             serviceName:name,
-            date:dateString
+            date:dateString,
+            status:'Pending'
         }
         // send to the server
         fetch('https://lit-caverns-99762.herokuapp.com/appointments',{
